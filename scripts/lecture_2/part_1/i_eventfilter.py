@@ -36,7 +36,7 @@ class Window(QtWidgets.QWidget):
         :return: bool
         """
 
-        # print(watched, event)
+        print(watched, event)
 
         if watched == self.label and event.type() == QtCore.QEvent.Type.MouseButtonPress:
             print("mouse pressed")

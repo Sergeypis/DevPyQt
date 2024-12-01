@@ -141,9 +141,9 @@ class Window(QtWidgets.QWidget):
         self.pushButtonDoubleSpinBox.clicked.connect(self.onPushButtonDoubleSpinBoxClicked)  # подключить слот для вывода значения из doubleSpinBox в plainTextEditLog при нажатии на кнопку
         self.pushButtonTimeEdit.clicked.connect(self.onPushButtonTimeEditClicked)  # подключить слот для вывода времени из timeEdit в plainTextEditLog при нажатии на кнопку
         self.pushButtonDateTimeEdit.clicked.connect(self.onPushButtonDateTimeEditClicked)  # подключить слот для вывода времени из dateTimeEdit в plainTextEditLog при нажатии на кнопку
-        self.pushButtonClearLog.clicked.connect(self.plainTextEditLog.clear)  # TODO подключить слот для очистки plainTextEditLog при нажатии на кнопку
+        self.pushButtonClearLog.clicked.connect(self.plainTextEditLog.clear)  # подключить слот для очистки plainTextEditLog при нажатии на кнопку
 
-        self.comboBox.currentTextChanged.connect(self.comboBoxCurrentTextChanged)  # TODO подключить слот для вывода текста в plainTextEditLog при изменении выбранного элемента в comboBox
+        self.comboBox.currentTextChanged.connect(self.comboBoxCurrentTextChanged)  # подключить слот для вывода текста в plainTextEditLog при изменении выбранного элемента в comboBox
         self.spinBox.textChanged.connect(self.spinBoxTextChanged)  # подключить слот для вывода значения в plainTextEditLog при изменении значения в spinBox
         self.dateTimeEdit.dateTimeChanged.connect(self.dateTimeEditDateTimeChanged)  # подключить слот для вывода датывремени в plainTextEditLog при изменении датывремени в dateTimeEdit
 
