@@ -70,6 +70,7 @@ class Window(QtWidgets.QWidget):
     def get_screen_count() -> int:
         return len(QGuiApplication.screens())
 
+    # events -----------------------------------------------------------
     def eventFilter(self, watched: QtCore.QObject, event: QtCore.QEvent) -> bool:
         """
         Перехват события Resize, при изменении размера окна выводится его новый размер.
@@ -86,12 +87,12 @@ class Window(QtWidgets.QWidget):
 
         return super(Window, self).eventFilter(watched, event)
 
-    def moveEvent(self, event: QtCore.QEvent) -> None:
+    def moveEvent(self, event: QtGui.QMoveEvent) -> None:
         """
         Перехват события перемещения окна
 
-        :param event: QtCore.QMoveEvent
-        :return: bool
+        :param event: QtGui.QMoveEvent
+        :return: None
         """
 
         print(f'{get_time()} - Старая позиция окна: {event.oldPos().toTuple()}')
@@ -99,12 +100,12 @@ class Window(QtWidgets.QWidget):
         print()
         QtWidgets.QWidget.moveEvent(self, event)
 
-    def changeEvent(self, event: QtCore.QEvent) -> None:
+    def changeEvent(self, event: QtGui.QWindowStateChangeEvent) -> None:
         """
         Перехват события состояния окна:
         Свёрнуто, Развёрнуто, Активно, Полноэкранный режим
 
-        :param event: QtCore.QEvent
+        :param event: QtGui.QWindowStateChangeEvent
         :return: None
         """
         if event.type() == 99:
@@ -128,21 +129,21 @@ class Window(QtWidgets.QWidget):
 
             QtWidgets.QWidget.changeEvent(self, event)
 
-    def showEvent(self, event: QtCore.QEvent) -> None:
+    def showEvent(self, event: QtGui.QShowEvent) -> None:
         """
         Перехват события отображения окна
 
-        :param event: QtCore.QEvent
+        :param event: QtGui.QShowEvent
         :return: None
         """
         print(f'{get_time()} - "Oкнo отображено"')
         QtWidgets.QWidget.showEvent(self, event)
 
-    def hideEvent(self, event: QtCore.QEvent) -> None:
+    def hideEvent(self, event: QtGui.QHideEvent) -> None:
         """
         Перехват события скрытия окна
 
-        :param event: QtCore.QEvent
+        :param event: QtGui.QHideEvent
         :return: None
         """
         print(f'{get_time()} - "Oкнo скрыто"')
@@ -166,7 +167,7 @@ class Window(QtWidgets.QWidget):
 
     # slots --------------------------------------------------------------
 
-    def onPushButtonLTClicked(self):
+    def onPushButtonLTClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonLT "Переместить влево вверх"
 
@@ -175,7 +176,7 @@ class Window(QtWidgets.QWidget):
         screen_geometry = self.get_curr_scr_avaliable_geometry()
         self.move(screen_geometry.x(), screen_geometry.y())
 
-    def onPushButtonLBClicked(self):
+    def onPushButtonLBClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonLB "Переместить влево вниз"
 
@@ -186,7 +187,7 @@ class Window(QtWidgets.QWidget):
         window_width, window_height = self.get_size_window()
         self.move(screen_geometry.x(), screen_geometry.height() - window_height + screen_geometry.y())
 
-    def onPushButtonCenterlicked(self):
+    def onPushButtonCenterlicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonCenter "Переместить в центр полезного экрана"
 
@@ -197,7 +198,7 @@ class Window(QtWidgets.QWidget):
         window_width, window_height = self.get_size_window()
         self.move(screen_center_point.x() - window_width//2, screen_center_point.y() - window_height//2)
 
-    def onPushButtonRTClicked(self):
+    def onPushButtonRTClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonRT "Переместить вправо вверх"
 
@@ -207,7 +208,7 @@ class Window(QtWidgets.QWidget):
         window_width, window_height = self.get_size_window()
         self.move(screen_geometry.width() - window_width + screen_geometry.x(), screen_geometry.y())
 
-    def onPushButtonRBClicked(self):
+    def onPushButtonRBClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonRB "Переместить вправо вниз"
 
@@ -217,7 +218,7 @@ class Window(QtWidgets.QWidget):
         window_width, window_height = self.get_size_window()
         self.move(screen_geometry.width() - window_width + screen_geometry.x(), screen_geometry.height() - window_height + screen_geometry.y())
 
-    def onPushButtonMoveCoordsClicked(self):
+    def onPushButtonMoveCoordsClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonMoveCoords "Переместить"
 
@@ -227,7 +228,7 @@ class Window(QtWidgets.QWidget):
         screen_geometry = self.get_curr_scr_avaliable_geometry()
         self.move(screen_geometry.x() + int(self.ui.spinBoxX.text()), screen_geometry.y() + int(self.ui.spinBoxY.text()))
 
-    def onPushButtonGetDataClicked(self):
+    def onPushButtonGetDataClicked(self) -> None:
         """
         Обработка сигнала clicked для кнопки pushButtonGetData
         Вывод информации в plainTextEdit:
@@ -245,7 +246,7 @@ class Window(QtWidgets.QWidget):
         """
         self.ui.plainTextEdit.setPlainText('\n'.join(self.get_screen_info_in_plainTextEdit()))
 
-    def get_screen_info_in_plainTextEdit(self):
+    def get_screen_info_in_plainTextEdit(self) -> list[str]:
         list_parametrs = [
             f'Текущее время: {get_time()}',
             f'Количество экранов: {self.get_screen_count()}',
