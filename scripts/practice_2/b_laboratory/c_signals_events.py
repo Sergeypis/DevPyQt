@@ -80,7 +80,11 @@ class Window(QtWidgets.QWidget):
         :return: bool
         """
 
-        # print(watched, event)
+        # print(watched, event, event.type())
+
+        # if event.type() == QtCore.QEvent.Type.NonClientAreaMouseMove:
+        # if event.type() == QtCore.QEvent.Type.Move and event.type() == QtCore.QEvent.Type.NonClientAreaMouseButtonPress:
+        #     print("qwerty")
 
         if watched == self.window() and event.type() == QtCore.QEvent.Type.Resize:
             print(f'{get_time()} - Размер окна: {"x".join(map(str, self.get_size_window()))}')

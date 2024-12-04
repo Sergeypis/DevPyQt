@@ -27,10 +27,10 @@ class Window(QtWidgets.QWidget):
         self.pushButtonClear = QtWidgets.QPushButton('Clear')
 
     def __initSignals(self):
-        pass
+        self.pushButtonMirror.clicked.connect(self.__onPushButtonMirrorClicked())
 
     def __onPushButtonMirrorClicked(self):
-        pass
+        self.lineEditMirror.setText(self.lineEditInput.text())
 
     def __onPushButtonClearClicked(self):
         pass
