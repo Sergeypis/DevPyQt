@@ -23,6 +23,8 @@ class Ui_sys_info_form(object):
     def setupUi(self, sys_info_form):
         if not sys_info_form.objectName():
             sys_info_form.setObjectName(u"sys_info_form")
+        sys_info_form.setWindowModality(Qt.WindowModality.NonModal)
+        sys_info_form.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         sys_info_form.resize(310, 355)
         sys_info_form.setStyleSheet(u"background-color: rgb(102, 102, 102);\n"
 "color: rgb(255, 255, 0);")
@@ -151,10 +153,10 @@ class Ui_sys_info_form(object):
         self.lcd_sys.setAutoFillBackground(False)
         self.lcd_sys.setStyleSheet(u"background-color: rgb(0, 0, 0);\n"
 "color: rgb(255, 0, 0);")
-        self.lcd_sys.setSmallDecimalPoint(True)
-        self.lcd_sys.setDigitCount(3)
+        self.lcd_sys.setSmallDecimalPoint(False)
+        self.lcd_sys.setDigitCount(5)
         self.lcd_sys.setSegmentStyle(QLCDNumber.SegmentStyle.Flat)
-        self.lcd_sys.setProperty("value", 0.000000000000000)
+        self.lcd_sys.setProperty("value", 1.000000000000000)
 
         self.horizontalLayout_6.addWidget(self.lcd_sys)
 

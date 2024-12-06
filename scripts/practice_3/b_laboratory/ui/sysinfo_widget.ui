@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>sys_info_form</class>
  <widget class="QWidget" name="sys_info_form">
+  <property name="windowModality">
+   <enum>Qt::WindowModality::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
