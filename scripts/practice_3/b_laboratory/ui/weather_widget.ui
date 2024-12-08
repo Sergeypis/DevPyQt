@@ -81,27 +81,21 @@ alternate-background-color: rgb(255, 255, 0);</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="input_delay">
+            <widget class="QSpinBox" name="input_delay">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="inputMethodHints">
-              <set>Qt::InputMethodHint::ImhDigitsOnly</set>
-             </property>
-             <property name="text">
-              <string>1</string>
+             <property name="wrapping">
+              <bool>false</bool>
              </property>
              <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
-             <property name="cursorMoveStyle">
-              <enum>Qt::CursorMoveStyle::LogicalMoveStyle</enum>
-             </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
+             <property name="minimum">
+              <number>1</number>
              </property>
             </widget>
            </item>
@@ -112,6 +106,18 @@ alternate-background-color: rgb(255, 255, 0);</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <property name="maxVisibleItems">
+              <number>3</number>
+             </property>
+             <property name="maxCount">
+              <number>3</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
              </property>
              <item>
               <property name="text">
@@ -187,7 +193,7 @@ alternate-background-color: rgb(255, 255, 0);</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="input_lon_2">
+            <widget class="QLineEdit" name="input_lon">
              <property name="text">
               <string>30.407833</string>
              </property>
@@ -222,6 +228,9 @@ alternate-background-color: rgb(255, 255, 0);</string>
       </item>
       <item alignment="Qt::AlignmentFlag::AlignHCenter">
        <widget class="QPushButton" name="pb_get_data">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -230,6 +239,18 @@ alternate-background-color: rgb(255, 255, 0);</string>
         </property>
         <property name="text">
          <string>Получить данные</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

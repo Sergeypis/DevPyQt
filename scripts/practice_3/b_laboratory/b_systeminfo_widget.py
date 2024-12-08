@@ -82,7 +82,7 @@ class SysWindow(QtWidgets.QWidget):
             # self.thread_sys.quit()
             time.sleep(1)
             event.accept()
-            # self.exit_syswindow_signal.emit(None)
+            self.status_bar_signal.emit("")
         else:
             event.ignore()
 
@@ -104,15 +104,13 @@ class SysWindow(QtWidgets.QWidget):
 
         self.ui_sys.spin_exactly.valueChanged.connect(self.change_sys_delay)
         self.thread_sys.systemInfo_signal.connect(self.set_system_indicator)
-
-        self.thread_sys.started.connect(self.set_start_signal)
-        # self.thread_sys.finished.connect(self.thread_sys.deleteLater)
         self.thread_sys.finished.connect(self.set_finish_signal)
+        # self.thread_sys.finished.connect(self.thread_sys.deleteLater)
 
     # slots --------------------------------------------------------------
-
     def start_sys_thread(self) -> None:
         self.thread_sys.start()
+        self.thread_sys.started.connect(self.set_start_signal)
 
     def change_sys_delay(self, delay: float) -> None:
         self.thread_sys.delay = delay

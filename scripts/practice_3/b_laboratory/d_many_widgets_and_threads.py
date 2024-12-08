@@ -61,7 +61,8 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         self.weather_window = WeatherWindow()
         self.weather_window.show()
-        # self.sys_wweather_windowindow.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+        self.weather_window.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication()

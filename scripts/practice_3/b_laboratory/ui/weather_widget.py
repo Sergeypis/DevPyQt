@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'weather_widget.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
     QLabel, QLineEdit, QPlainTextEdit, QPushButton,
-    QSizePolicy, QVBoxLayout, QWidget)
+    QSizePolicy, QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_weather_form(object):
     def setupUi(self, weather_form):
@@ -66,17 +66,16 @@ class Ui_weather_form(object):
 
         self.horizontalLayout.addWidget(self.label)
 
-        self.input_delay = QLineEdit(self.gb_delay_sys)
+        self.input_delay = QSpinBox(self.gb_delay_sys)
         self.input_delay.setObjectName(u"input_delay")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.input_delay.sizePolicy().hasHeightForWidth())
         self.input_delay.setSizePolicy(sizePolicy1)
-        self.input_delay.setInputMethodHints(Qt.InputMethodHint.ImhDigitsOnly)
-        self.input_delay.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.input_delay.setCursorMoveStyle(Qt.CursorMoveStyle.LogicalMoveStyle)
-        self.input_delay.setClearButtonEnabled(True)
+        self.input_delay.setWrapping(False)
+        self.input_delay.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.input_delay.setMinimum(1)
 
         self.horizontalLayout.addWidget(self.input_delay)
 
@@ -87,6 +86,9 @@ class Ui_weather_form(object):
         self.cb_units_duration.setObjectName(u"cb_units_duration")
         sizePolicy1.setHeightForWidth(self.cb_units_duration.sizePolicy().hasHeightForWidth())
         self.cb_units_duration.setSizePolicy(sizePolicy1)
+        self.cb_units_duration.setMaxVisibleItems(3)
+        self.cb_units_duration.setMaxCount(3)
+        self.cb_units_duration.setFrame(True)
 
         self.horizontalLayout.addWidget(self.cb_units_duration)
 
@@ -127,10 +129,10 @@ class Ui_weather_form(object):
 
         self.verticalLayout.addWidget(self.input_lat)
 
-        self.input_lon_2 = QLineEdit(self.gb_info_sys)
-        self.input_lon_2.setObjectName(u"input_lon_2")
+        self.input_lon = QLineEdit(self.gb_info_sys)
+        self.input_lon.setObjectName(u"input_lon")
 
-        self.verticalLayout.addWidget(self.input_lon_2)
+        self.verticalLayout.addWidget(self.input_lon)
 
 
         self.horizontalLayout_2.addLayout(self.verticalLayout)
@@ -152,11 +154,15 @@ class Ui_weather_form(object):
 
         self.pb_get_data = QPushButton(self.widget_weather)
         self.pb_get_data.setObjectName(u"pb_get_data")
+        self.pb_get_data.setEnabled(True)
         sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.pb_get_data.sizePolicy().hasHeightForWidth())
         self.pb_get_data.setSizePolicy(sizePolicy3)
+        self.pb_get_data.setCheckable(False)
+        self.pb_get_data.setAutoDefault(False)
+        self.pb_get_data.setFlat(False)
 
         self.verticalLayout_4.addWidget(self.pb_get_data, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -166,6 +172,10 @@ class Ui_weather_form(object):
 
         self.retranslateUi(weather_form)
 
+        self.cb_units_duration.setCurrentIndex(0)
+        self.pb_get_data.setDefault(False)
+
+
         QMetaObject.connectSlotsByName(weather_form)
     # setupUi
 
@@ -174,7 +184,6 @@ class Ui_weather_form(object):
         self.lbl_weather_widget.setText(QCoreApplication.translate("weather_form", u"WeatherWidget", None))
         self.gb_delay_sys.setTitle(QCoreApplication.translate("weather_form", u"\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 \u043f\u0435\u0440\u0438\u043e\u0434\u0430 \u043e\u043f\u0440\u043e\u0441\u0430", None))
         self.label.setText(QCoreApplication.translate("weather_form", u"\u0412\u0435\u0435\u0434\u0438\u0442\u0435 \u0447\u0438\u0441\u043b\u043e:", None))
-        self.input_delay.setText(QCoreApplication.translate("weather_form", u"1", None))
         self.cb_units_duration.setItemText(0, QCoreApplication.translate("weather_form", u"\u0441\u0435\u043a", None))
         self.cb_units_duration.setItemText(1, QCoreApplication.translate("weather_form", u"\u043c\u0438\u043d", None))
         self.cb_units_duration.setItemText(2, QCoreApplication.translate("weather_form", u"\u0447\u0430\u0441", None))
@@ -184,8 +193,8 @@ class Ui_weather_form(object):
         self.lbl_ram.setText(QCoreApplication.translate("weather_form", u"\u0414\u043e\u043b\u0433\u043e\u0442\u0430:", None))
         self.input_lat.setText(QCoreApplication.translate("weather_form", u"59.687839", None))
         self.input_lat.setPlaceholderText(QCoreApplication.translate("weather_form", u"59.687839", None))
-        self.input_lon_2.setText(QCoreApplication.translate("weather_form", u"30.407833", None))
-        self.input_lon_2.setPlaceholderText(QCoreApplication.translate("weather_form", u"30.407833", None))
+        self.input_lon.setText(QCoreApplication.translate("weather_form", u"30.407833", None))
+        self.input_lon.setPlaceholderText(QCoreApplication.translate("weather_form", u"30.407833", None))
         self.pb_get_data.setText(QCoreApplication.translate("weather_form", u"\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435", None))
     # retranslateUi
 

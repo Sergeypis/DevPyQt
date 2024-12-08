@@ -51,7 +51,6 @@ class WeatherHandler(QtCore.QThread):
         self.__delay = 10
         self.__status = None
 
-
     def setDelay(self, delay) -> None:
         """
         Метод для установки времени задержки обновления сайта
@@ -62,12 +61,19 @@ class WeatherHandler(QtCore.QThread):
 
         self.__delay = delay
 
+    @property
+    def status(self):
+        return self.__status
+
+    @status.setter
+    def status(self, status: bool):
+        self.__status = status
+
     def run(self) -> None:
-        # TODO настройте метод для корректной работы
+        if self.status is None:
+            self.status = True
 
         while self.__status:
-            # TODO Примерный код ниже
-
             response = requests.get(self.__api_url)
             data = response.json()
             self.weatherdataSignal.emit(data)
