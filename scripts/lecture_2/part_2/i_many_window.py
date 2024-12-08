@@ -43,7 +43,6 @@ class MainWindow(QtWidgets.QWidget):
 
         :return: None
         """
-
         self.child_window = OtherWindow()
         self.child_window.show()
 

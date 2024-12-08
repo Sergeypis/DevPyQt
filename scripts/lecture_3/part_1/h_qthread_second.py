@@ -96,7 +96,6 @@ class Window(QtWidgets.QWidget):
 
         self.label.setText(f"Выполнение долгой задачи: {progress}")
 
-
 if __name__ == '__main__':
     app = QtWidgets.QApplication()
 

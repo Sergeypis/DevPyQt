@@ -11,14 +11,17 @@
 5. установку времени задержки сделать "горячей", т.е. поток должен сразу
 реагировать на изменение времени задержки
 """
-from PySide6 import QtWidgets,QtCore
+import time
+from turtledemo.penrose import start
+
+from PySide6 import QtWidgets, QtCore, QtGui
 from scripts.practice_3.b_laboratory.ui.sysinfo_widget import Ui_sys_info_form
 from scripts.practice_3.b_laboratory.a_threads import SystemInfo
 
 
 class SysWindow(QtWidgets.QWidget):
-    # thread_delay_signal = QtCore.Signal(int)
-    # lcd_load_signal = QtCore.Signal(int)
+    status_bar_signal = QtCore.Signal(str)
+    # exit_syswindow_signal = QtCore.Signal(bool)
     # settings = QtCore.QSettings('d_eventfilter_settings.ini', QtCore.QSettings.IniFormat)
 
     def __init__(self, parent=None):
@@ -32,6 +35,7 @@ class SysWindow(QtWidgets.QWidget):
 
         self.initSignals()
         self.load_settings()
+        self.start_sys_thread()
 
     def add_setupUi(self):
         """
@@ -59,7 +63,28 @@ class SysWindow(QtWidgets.QWidget):
         """
 
         self.thread_sys = SystemInfo()
-        self.thread_sys.start()
+        # self.thread_sys.start()
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        """
+        Событие закрытия окна
+
+        :param event: QtGui.QCloseEvent
+        :return: None
+        """
+
+        answer = QtWidgets.QMessageBox.question(
+            self, "Закрыть окно?", "Вы действительно хотите закрыть окно?"
+        )
+
+        if answer == QtWidgets.QMessageBox.StandardButton.Yes:
+            self.thread_sys.stop_sys_thread()
+            # self.thread_sys.quit()
+            time.sleep(1)
+            event.accept()
+            # self.exit_syswindow_signal.emit(None)
+        else:
+            event.ignore()
 
     # settings -----------------------------------------------------------
 
@@ -80,12 +105,26 @@ class SysWindow(QtWidgets.QWidget):
         self.ui_sys.spin_exactly.valueChanged.connect(self.change_sys_delay)
         self.thread_sys.systemInfo_signal.connect(self.set_system_indicator)
 
+        self.thread_sys.started.connect(self.set_start_signal)
+        # self.thread_sys.finished.connect(self.thread_sys.deleteLater)
+        self.thread_sys.finished.connect(self.set_finish_signal)
+
     # slots --------------------------------------------------------------
 
-    def change_sys_delay(self, delay: float) -> None:
-        self.thread_sys.thread_delay_signal.emit(delay)
+    def start_sys_thread(self) -> None:
+        self.thread_sys.start()
 
-    def set_system_indicator(self, sys_data: list):
+    def change_sys_delay(self, delay: float) -> None:
+        self.thread_sys.delay = delay
+
+    def set_system_indicator(self, sys_data: list) -> None:
         self.ui_sys.indicator_cpu.setValue(sys_data[0])
         self.ui_sys.indicator_ram.setValue(sys_data[1])
+
+    def set_start_signal(self):
+        self.status_bar_signal.emit(f'Запущен поток {self.__class__.__name__}')
+
+    def set_finish_signal(self):
+        self.status_bar_signal.emit(f'Поток {self.__class__.__name__} остановлен')
+        print("stop thread")
 
