@@ -73,9 +73,25 @@ class WeatherHandler(QtCore.QThread):
         if self.status is None:
             self.status = True
 
-        while self.__status:
-            response = requests.get(self.__api_url)
-            data = response.json()
+        while self.status:
+            try:
+                response = requests.get(self.__api_url)
+                data = response.json()
+            except Exception:
+                data = {'error': 'True', 'reason': 'Сервер не отвечает!\nПроверьте интернет соединение и URL-адрес.'}
+
             self.weatherdataSignal.emit(data)
-            time.sleep(self.__delay)
+            for _ in range(self.__delay):
+                if _ == self.__delay - 1:
+                    break
+                time.sleep(1)
+                if not self.status:
+                    break
+
+        # while self.__status:
+        #     response = requests.get(self.__api_url)
+        #     data = response.json()
+        #     self.weatherdataSignal.emit(data)
+        #     time.sleep(self.__delay)
+
 

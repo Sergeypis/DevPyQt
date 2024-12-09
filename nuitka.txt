@@ -1,0 +1,1 @@
+nuitka --standalone --enable-plugin=pyside6 --onefile --output-filename="MPF Converting Tool" --windows-console-mode=disable --windows-icon-from-ico=./favicon.ico main.py

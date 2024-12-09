@@ -1,33 +1,61 @@
 """
 Реализовать окно, которое будет объединять в себе сразу два предыдущих виджета
 """
+import os
 import sys
 import time
+import platform
+import subprocess
 
 from PySide6 import QtWidgets, QtCore
 
-from scripts.practice_3.b_laboratory.b_systeminfo_widget import SysWindow
-from scripts.practice_3.b_laboratory.c_weatherapi_widget import WeatherWindow
-from scripts.practice_3.b_laboratory.ui.main_window import Ui_MainWindow
+from b_systeminfo_widget import SysWindow
+from c_weatherapi_widget import WeatherWindow
+from ui.main_window import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    window_create = False
+    main_window_created = False
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # self.sys_window = None
+        self.check_double_window()
 
+        # self.sys_window = None
         # self.wether_window = None
 
         self.ui_main = Ui_MainWindow()
+
         self.ui_main.setupUi(self)
         # self.add_setupUi()
 
         # self.load_settings()
         self.initSignals()
 
-        MainWindow.window_create = True
+    # @classmethod
+    # def information_message(cls):
+    #         msg_box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, f"Ошибка",
+    #                     f"Произведена попытка запустить вторую копию приложения ",
+    #                     QtWidgets.QMessageBox.StandardButton.Ok, None)
+    #         msg_box.setInformativeText("Одновременно два окна приложения не могут быть запущены!")
+    #         reply = msg_box.exec()
+    #         if reply == QtWidgets.QMessageBox.StandardButton.Ok:
+    #             return None
+    #
+    # @classmethod
+    # def check_double_window(cls):
+    #     if cls.main_window_created:
+    #         cls.information_message()
+    #         sys.exit()
+    #     else:
+    #         cls.main_window_created = True
+
+    def check_double_window(self):
+        p = subprocess.Popen(f'tasklist /FI "IMAGENAME eq {os.path.basename(sys.argv[0])}" /FO "LIST"', stdout=subprocess.PIPE, text=True)
+        out, _ = p.communicate()
+        if out.count((sys.argv[0].rsplit('\\', 1)[1])) >= 2:
+            # sys.stderr.write('program is already running')
+            sys.exit()
 
     # settings -----------------------------------------------------------
 
@@ -67,10 +95,9 @@ class MainWindow(QtWidgets.QMainWindow):
 if __name__ == "__main__":
     app = QtWidgets.QApplication()
 
-    if MainWindow.window_create:
-        sys.exit()
+    # if MainWindow.main_window_created:
+    #     sys.exit()
 
     main_window = MainWindow()
     main_window.show()
-
     sys.exit(app.exec())

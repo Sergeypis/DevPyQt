@@ -13,8 +13,8 @@ import datetime
 import time, re
 
 from PySide6 import QtWidgets, QtCore, QtGui
-from scripts.practice_3.b_laboratory.a_threads import WeatherHandler
-from scripts.practice_3.b_laboratory.ui.weather_widget import Ui_weather_form
+from a_threads import WeatherHandler
+from ui.weather_widget import Ui_weather_form
 
 
 class WeatherWindow(QtWidgets.QWidget):
@@ -65,6 +65,24 @@ class WeatherWindow(QtWidgets.QWidget):
         self.thread_weather = WeatherHandler('','')
         # self.thread_weather = WeatherHandler()
 
+    @staticmethod
+    def is_valid_coord(coord: str) -> bool:
+        pattern = re.compile('^(?:-?\d{,3}.\d{,6})$')
+        return bool(pattern.match(coord))
+
+    def get_delay(self) -> int:
+        """
+        Получает данные из полей ввода задержки и преобразовывает к секундам
+
+        :return: Задержку в секундах типа int
+        """
+        delay = self.ui_weather.input_delay.text()
+        units = self.ui_weather.cb_units_duration.currentText()
+        mul = {'сек': 1, 'мин': 60, 'час': 3600}
+        return int(delay) * mul[units]
+    # settings -----------------------------------------------------------
+
+    # events -----------------------------------------------------------
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         """
         Событие закрытия окна
@@ -78,15 +96,13 @@ class WeatherWindow(QtWidgets.QWidget):
         )
 
         if answer == QtWidgets.QMessageBox.StandardButton.Yes:
-            time.sleep(0.2)
+            if self.thread_weather.isRunning():
+                self.start_and_stop_thread()
+            time.sleep(0.5)
             event.accept()
             self.status_bar_signal.emit("")
         else:
             event.ignore()
-
-    # settings -----------------------------------------------------------
-
-    # events -----------------------------------------------------------
 
     # signals ----------------------------------------------------------
     def initSignals(self) -> None:
@@ -100,11 +116,6 @@ class WeatherWindow(QtWidgets.QWidget):
         self.ui_weather.input_lon.textChanged.connect(self.get_longitude)
 
     # slots --------------------------------------------------------------
-    @staticmethod
-    def is_valid_coord(coord: str) -> bool:
-        pattern = re.compile('^(?:-?\d{,3}[,.]\d{,6})$')
-        return bool(pattern.match(coord))
-
     def get_latitude(self) -> None:
         """
         Забирает координаты из поля ввода широты.
@@ -138,17 +149,6 @@ class WeatherWindow(QtWidgets.QWidget):
             self.ui_weather.output_field.setPlainText("Координата долготы введена неверно, повторите ввод!")
             self.ui_weather.pb_get_data.setEnabled(False)
 
-    def get_delay(self) -> int:
-        """
-        Получает данные из полей ввода задержки и преобразовывает к секундам
-
-        :return: Задержку в секундах типа int
-        """
-        delay = self.ui_weather.input_delay.text()
-        units = self.ui_weather.cb_units_duration.currentText()
-        mul = {'сек': 1, 'мин': 60, 'час': 3600}
-        return int(delay) * mul[units]
-
     def block_fields_on_start(self):
         self.ui_weather.input_lon.setEnabled(False)
         self.ui_weather.input_lat.setEnabled(False)
@@ -179,12 +179,12 @@ class WeatherWindow(QtWidgets.QWidget):
                 f"Дата и время: {datetime.datetime.now()}",
                 f"Широта: {data.get('latitude', '---')}",
                 f"Долгота: {data.get('longitude', '---')}",
-                f"Температура: {data.get('current_weather').get('temperature', '---')} \
-                        {data.get('current_weather_units').get('temperature', '---')}",
-                f"Скорость ветра: {data.get('current_weather').get('windspeed', '---')} \
-                        {data.get('current_weather_units').get('windspeed', '---')}",
-                f"Направление ветра: {data.get('current_weather').get('winddirection', '---')} \
-                        {data.get('current_weather_units').get('winddirection', '---')}",
+                f"Температура: {data.get('current_weather').get('temperature', '---')}\
+{data.get('current_weather_units').get('temperature', '---')}",
+                f"Скорость ветра: {data.get('current_weather').get('windspeed', '---')}\
+{data.get('current_weather_units').get('windspeed', '---')}",
+                f"Направление ветра: {data.get('current_weather').get('winddirection', '---')}\
+{data.get('current_weather_units').get('winddirection', '---')}",
             ]
             self.ui_weather.output_field.setPlainText('\n'.join(parse_data))
 
@@ -208,7 +208,4 @@ class WeatherWindow(QtWidgets.QWidget):
             self.thread_weather.status = False
             self.thread_weather.finished.connect(self.unblock_fields_on_stop)
             self.thread_weather.finished.connect(self.create_finish_signal)
-
-    # def start_weather_thread(self) -> None:
-    #     self.thread_weather.start()
 

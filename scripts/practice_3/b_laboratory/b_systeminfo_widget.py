@@ -15,8 +15,8 @@ import time
 from turtledemo.penrose import start
 
 from PySide6 import QtWidgets, QtCore, QtGui
-from scripts.practice_3.b_laboratory.ui.sysinfo_widget import Ui_sys_info_form
-from scripts.practice_3.b_laboratory.a_threads import SystemInfo
+from ui.sysinfo_widget import Ui_sys_info_form
+from a_threads import SystemInfo
 
 
 class SysWindow(QtWidgets.QWidget):
