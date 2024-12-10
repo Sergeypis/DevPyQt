@@ -54,9 +54,14 @@ class MainWindow(QtWidgets.QMainWindow):
             # sys.stderr.write('program is already running')
             sys.exit()
 
+    def on_close(self):
+        QtCore.QCoreApplication.instance().exit()
+
     # settings -----------------------------------------------------------
 
     # events -----------------------------------------------------------
+    def closeEvent(self, event):
+        self.on_close()
 
     # signals ---------------------------------------------------------
     def initSignals(self) -> None:
