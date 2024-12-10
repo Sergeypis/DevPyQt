@@ -10,6 +10,7 @@
 4. поток необходимо запускать и останавливать при нажатии на кнопку
 """
 import datetime
+import sys
 import time, re
 
 from PySide6 import QtWidgets, QtCore, QtGui
@@ -18,12 +19,19 @@ from ui.weather_widget import Ui_weather_form
 
 
 class WeatherWindow(QtWidgets.QWidget):
+    # weather_window_created = False
     status_bar_signal = QtCore.Signal(str)
-    # exit_syswindow_signal = QtCore.Signal(bool)
-    # settings = QtCore.QSettings('d_eventfilter_settings.ini', QtCore.QSettings.IniFormat)
+    on_close_signal = QtCore.Signal()
+
+    # def __new__(cls):
+    #     if cls.check_double_window():
+    #         return None
+    #     else:
+    #         return super().__new__(cls)
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.thread_weather = None
         self.__lat = None
         self.__lon = None
@@ -35,7 +43,30 @@ class WeatherWindow(QtWidgets.QWidget):
 
         self.initSignals()
         self.load_settings()
-        # self.start_weather_thread()
+
+    # @classmethod
+    # def information_message(cls):
+    #         msg_box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, f"Ошибка",
+    #                     f"Произведена попытка запустить вторую копию окна ",
+    #                     QtWidgets.QMessageBox.StandardButton.Ok, None)
+    #         msg_box.setInformativeText("Одновременно два окна приложения не могут быть запущены!")
+    #         reply = msg_box.exec()
+    #         if reply == QtWidgets.QMessageBox.StandardButton.Ok:
+    #             return None
+    #
+    # @classmethod
+    # def check_double_window(cls):
+    #     if cls.weather_window_created:
+    #         cls.information_message()
+    #         return True
+    #     else:
+    #         cls.weather_window_created = True
+    #         return False
+
+    @staticmethod
+    def is_valid_coord(coord: str) -> bool:
+        pattern = re.compile('^(?:-?\d{,3}.\d{,6})$')
+        return bool(pattern.match(coord))
 
     def add_setupUi(self):
         """
@@ -65,11 +96,6 @@ class WeatherWindow(QtWidgets.QWidget):
         self.thread_weather = WeatherHandler('','')
         # self.thread_weather = WeatherHandler()
 
-    @staticmethod
-    def is_valid_coord(coord: str) -> bool:
-        pattern = re.compile('^(?:-?\d{,3}.\d{,6})$')
-        return bool(pattern.match(coord))
-
     def get_delay(self) -> int:
         """
         Получает данные из полей ввода задержки и преобразовывает к секундам
@@ -80,6 +106,15 @@ class WeatherWindow(QtWidgets.QWidget):
         units = self.ui_weather.cb_units_duration.currentText()
         mul = {'сек': 1, 'мин': 60, 'час': 3600}
         return int(delay) * mul[units]
+
+    def on_close(self):
+        """
+        Действия при закрытии окна WeatherWindow
+        """
+        if self.thread_weather.isRunning():
+            self.start_and_stop_thread()
+        time.sleep(0.5)
+
     # settings -----------------------------------------------------------
 
     # events -----------------------------------------------------------
@@ -90,17 +125,12 @@ class WeatherWindow(QtWidgets.QWidget):
         :param event: QtGui.QCloseEvent
         :return: None
         """
-
-        answer = QtWidgets.QMessageBox.question(
-            self, "Закрыть окно?", "Вы действительно хотите закрыть окно?"
-        )
+        answer = QtWidgets.QMessageBox.question(self, "Закрыть окно?", "Вы действительно хотите закрыть окно?")
 
         if answer == QtWidgets.QMessageBox.StandardButton.Yes:
-            if self.thread_weather.isRunning():
-                self.start_and_stop_thread()
-            time.sleep(0.5)
+            self.on_close()
             event.accept()
-            self.status_bar_signal.emit("")
+            self.on_close_signal.emit()
         else:
             event.ignore()
 

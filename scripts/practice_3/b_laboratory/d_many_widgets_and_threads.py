@@ -8,6 +8,7 @@ import platform
 import subprocess
 
 from PySide6 import QtWidgets, QtCore
+from shiboken6 import delete
 
 from b_systeminfo_widget import SysWindow
 from c_weatherapi_widget import WeatherWindow
@@ -15,21 +16,17 @@ from ui.main_window import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    main_window_created = False
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.check_double_window()
 
-        # self.sys_window = None
-        # self.wether_window = None
+        self.sys_window = None
+        self.weather_window = None
 
         self.ui_main = Ui_MainWindow()
-
         self.ui_main.setupUi(self)
-        # self.add_setupUi()
 
-        # self.load_settings()
         self.initSignals()
 
     # @classmethod
@@ -78,26 +75,41 @@ class MainWindow(QtWidgets.QMainWindow):
         Запускает окно информации о загрузке системы
         :return: None
         """
-        self.sys_window = SysWindow()
-        self.sys_window.show()
-        self.sys_window.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+        if self.sys_window is None:
+            self.sys_window = SysWindow()
+            self.sys_window.show()
+
+            self.sys_window.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+            self.sys_window.on_close_signal.connect(self.sys_window_closed)
+
+    def sys_window_closed(self):
+        self.ui_main.statusbar.clearMessage()
+        self.sys_window = None
 
     def on_start_weather_widget(self):
         """
         Запускает окно запроса прогноза погоды
         :return: None
         """
-        self.weather_window = WeatherWindow()
-        self.weather_window.show()
-        self.weather_window.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+        # print(self.weather_window)
+        if self.weather_window is None:
+            self.weather_window = WeatherWindow()
+            self.weather_window.show()
+
+            self.weather_window.status_bar_signal.connect(self.ui_main.statusbar.showMessage)
+            self.weather_window.on_close_signal.connect(self.weather_window_closed)
+
+    def weather_window_closed(self):
+        self.ui_main.statusbar.clearMessage()
+        self.weather_window = None
+
+
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication()
 
-    # if MainWindow.main_window_created:
-    #     sys.exit()
-
     main_window = MainWindow()
     main_window.show()
+
     sys.exit(app.exec())

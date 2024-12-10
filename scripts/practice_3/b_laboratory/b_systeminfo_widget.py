@@ -21,11 +21,12 @@ from a_threads import SystemInfo
 
 class SysWindow(QtWidgets.QWidget):
     status_bar_signal = QtCore.Signal(str)
-    # exit_syswindow_signal = QtCore.Signal(bool)
+    on_close_signal = QtCore.Signal()
     # settings = QtCore.QSettings('d_eventfilter_settings.ini', QtCore.QSettings.IniFormat)
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.thread_sys = None
 
         self.initThreads()
@@ -65,6 +66,14 @@ class SysWindow(QtWidgets.QWidget):
         self.thread_sys = SystemInfo()
         # self.thread_sys.start()
 
+    def on_close(self):
+        self.thread_sys.stop_sys_thread()
+        while self.thread_sys.isRunning():
+            time.sleep(0.1)
+
+    # settings -----------------------------------------------------------
+
+    # events -----------------------------------------------------------
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         """
         Событие закрытия окна
@@ -73,22 +82,13 @@ class SysWindow(QtWidgets.QWidget):
         :return: None
         """
 
-        answer = QtWidgets.QMessageBox.question(
-            self, "Закрыть окно?", "Вы действительно хотите закрыть окно?"
-        )
-
+        answer = QtWidgets.QMessageBox.question(self, "Закрыть окно?", "Вы действительно хотите закрыть окно?")
         if answer == QtWidgets.QMessageBox.StandardButton.Yes:
-            self.thread_sys.stop_sys_thread()
-            # self.thread_sys.quit()
-            time.sleep(1)
+            self.on_close()
             event.accept()
-            self.status_bar_signal.emit("")
+            self.on_close_signal.emit()
         else:
             event.ignore()
-
-    # settings -----------------------------------------------------------
-
-    # events -----------------------------------------------------------
 
     # signals ----------------------------------------------------------
     def initSignals(self) -> None:
