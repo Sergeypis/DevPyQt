@@ -47,15 +47,18 @@ class MainWindow(QtWidgets.QMainWindow):
     #     else:
     #         cls.main_window_created = True
 
-    def check_double_window(self):
+    @staticmethod
+    def check_double_window():
         p = subprocess.Popen(f'tasklist /FI "IMAGENAME eq {os.path.basename(sys.argv[0])}" /FO "LIST"', stdout=subprocess.PIPE, text=True)
         out, _ = p.communicate()
         if out.count((sys.argv[0].rsplit('\\', 1)[1])) >= 2:
             # sys.stderr.write('program is already running')
             sys.exit()
 
-    def on_close(self):
+    @staticmethod
+    def on_close():
         QtCore.QCoreApplication.instance().exit()
+        # sys.exit()
 
     # settings -----------------------------------------------------------
 
@@ -107,8 +110,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def weather_window_closed(self):
         self.ui_main.statusbar.clearMessage()
         self.weather_window = None
-
-
 
 
 if __name__ == "__main__":

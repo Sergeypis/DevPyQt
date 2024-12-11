@@ -32,6 +32,7 @@ class WeatherWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
         self.thread_weather = None
         self.__lat = None
         self.__lon = None
@@ -113,7 +114,9 @@ class WeatherWindow(QtWidgets.QWidget):
         """
         if self.thread_weather.isRunning():
             self.start_and_stop_thread()
-        time.sleep(0.5)
+            while self.thread_weather.isRunning():
+                time.sleep(0.1)
+        # time.sleep(0.5)
 
     # settings -----------------------------------------------------------
 
